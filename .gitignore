@@ -243,4 +243,6 @@ dist
 **/venv/
 **/venv/
 
+**/env/
+
 .env
