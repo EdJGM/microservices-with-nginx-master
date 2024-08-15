@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  crud:
+    build:
+      context: ./movies
+    ports:
+      - "5000:5000"
+    networks:
+      - backend
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - PGSQL_HOST=${PGSQL_HOST}
+      - PGSQL_PORT=${PGSQL_PORT}
+      - PGSQL_USER=${PGSQL_USER}
+      - PGSQL_PASSWORD=${PGSQL_PASSWORD}
+      - PGSQL_DATABASE=${PGSQL_DATABASE}
+
+  login:
+    build:
+      context: ./login
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+    environment:
+      - SECRET_KEY=${LOGIN_SECRET_KEY}
+
+  api:
+    build:
+      context: ./api_call
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+  gateway:
+    build:
+      context: ./gateway
+    ports:
+      - "80:80"
+    networks:
+      - backend
+    depends_on:
+      - crud
+      - login
+      - api
+
+networks:
+  backend:
+    driver: bridge
